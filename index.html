@@ -762,6 +762,7 @@
         <a href="#workflow">Postup písania</a>
         <a href="#pseudokod">Pseudokód</a>
         <a href="#code-reading">Code reading</a>
+        <a href="#teoria">Teória</a>
         <a href="#tahak">Ťahák</a>
         <a href="#chyby">Chyby</a>
       </div>
@@ -986,6 +987,110 @@ return x</code></pre>
               <p class="plain-copy"><strong>Výsledok:</strong> `13`. Trace: štart `x = 1`; i=1 nepárne, `x = 1 * 1 = 1`; i=2 párne, `x = 1 + 2 = 3`; i=3 nepárne, `x = 3 * 3 = 9`; i=4 párne, `x = 9 + 4 = 13`. Sleduj presné poradie riadkov, lebo zmena poradia mení výsledok.</p>
             </div>
           </article>
+        </div>
+      </section>
+
+      <section id="teoria">
+        <div class="section-inner">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">Samostatná časť</p>
+              <h2>Teória: 18 skúškových otázok</h2>
+              <p>Teóriu sa uč ako krátke, presné odpovede. Na skúške stačí ukázať, že chápeš princíp; dlhé odseky berú čas praktickým úlohám.</p>
+            </div>
+          </div>
+          <div class="theory-grid" aria-label="Teoretické skúškové otázky">
+            <article class="theory-card">
+              <strong>1. Čo je algoritmus?</strong>
+              <p>Algoritmus je presne definovaný, jednoznačný a konečný postup krokov na vyriešenie problému alebo úlohy.</p>
+              <p><b>Zapamätaj si:</b> vstup sa postupom zmení na výstup.</p>
+            </article>
+            <article class="theory-card">
+              <strong>2. Charakteristiky algoritmu</strong>
+              <p>Má vstupy, výstup, presné kroky, konečnosť, vykonateľnosť a pri rovnakom vstupe dáva rovnaký výsledok.</p>
+              <p><b>Zapamätaj si:</b> presnosť + koniec + výsledok.</p>
+            </article>
+            <article class="theory-card">
+              <strong>3. Big-O notácia</strong>
+              <p>Big-O opisuje, ako rastie časová alebo pamäťová náročnosť algoritmu pri zväčšovaní vstupu `n`.</p>
+              <p><b>Zapamätaj si:</b> nerieši sekundy, ale rast počtu krokov.</p>
+            </article>
+            <article class="theory-card">
+              <strong>4. Insertion sort</strong>
+              <p>Postupne berie prvky z nezotriedenej časti a vkladá ich na správne miesto do už zotriedenej ľavej časti.</p>
+              <p><b>Obraz:</b> triedenie kariet v ruke.</p>
+            </article>
+            <article class="theory-card">
+              <strong>5. Selection sort</strong>
+              <p>Opakovane nájde najmenší prvok v nezotriedenej časti a vymení ho s prvým prvkom tejto časti.</p>
+              <p><b>Obraz:</b> stále vyberáš minimum.</p>
+            </article>
+            <article class="theory-card">
+              <strong>6. Bubble sort</strong>
+              <p>Opakovane porovnáva susedné prvky a vymieňa ich, ak sú v nesprávnom poradí; veľké hodnoty idú ku koncu.</p>
+              <p><b>Prakticky:</b> toto je triedenie, ktoré treba vedieť napísať.</p>
+            </article>
+            <article class="theory-card">
+              <strong>7. Quicksort</strong>
+              <p>Vyberie pivot, rozdelí prvky na menšie a väčšie ako pivot a obe časti rieši rekurzívne.</p>
+              <p><b>Zapamätaj si:</b> rozdeľ a panuj; priemerne `O(n log n)`.</p>
+            </article>
+            <article class="theory-card">
+              <strong>8. Jednosmerne zreťazený zoznam</strong>
+              <p>Je štruktúra uzlov, kde každý uzol obsahuje hodnotu a odkaz na nasledujúci uzol; posledný ukazuje na `NULL`.</p>
+              <p><b>Smer:</b> prechádza sa iba dopredu.</p>
+            </article>
+            <article class="theory-card">
+              <strong>9. Dvojsmerne zreťazený zoznam</strong>
+              <p>Každý uzol má hodnotu, odkaz na nasledujúci uzol a odkaz na predchádzajúci uzol.</p>
+              <p><b>Smer:</b> dá sa ísť dopredu aj dozadu.</p>
+            </article>
+            <article class="theory-card">
+              <strong>10. Lineárne vyhľadávanie</strong>
+              <p>Prechádza prvky od začiatku po koniec a každý porovnáva s hľadanou hodnotou.</p>
+              <p><b>Zložitosť:</b> `O(n)`, lebo v najhoršom prípade prejde celé pole.</p>
+            </article>
+            <article class="theory-card">
+              <strong>11. Binárne vyhľadávanie</strong>
+              <p>V zoradenom poli porovnáva hľadanú hodnotu so stredom a vždy zahodí polovicu intervalu.</p>
+              <p><b>Podmienka:</b> pole musí byť zoradené. Zložitosť `O(log n)`.</p>
+            </article>
+            <article class="theory-card">
+              <strong>12. Časová zložitosť</strong>
+              <p>Vyjadruje, koľko krokov alebo operácií algoritmus potrebuje vzhľadom na veľkosť vstupu.</p>
+              <p><b>Príklad:</b> jeden prechod poľom je typicky `O(n)`.</p>
+            </article>
+            <article class="theory-card">
+              <strong>13. Priestorová zložitosť</strong>
+              <p>Vyjadruje, koľko dodatočnej pamäte algoritmus potrebuje počas behu vzhľadom na veľkosť vstupu.</p>
+              <p><b>Príklad:</b> pár premenných je `O(1)`, pomocné pole je často `O(n)`.</p>
+            </article>
+            <article class="theory-card">
+              <strong>14. Najlepší, priemerný, najhorší prípad</strong>
+              <p>Popisujú správanie algoritmu podľa vstupu: ideálny vstup, typický vstup a najnevhodnejší vstup.</p>
+              <p><b>Príklad:</b> pri hľadaní je najlepší prípad prvok hneď na začiatku.</p>
+            </article>
+            <article class="theory-card">
+              <strong>15. Stack</strong>
+              <p>Zásobník funguje na princípe LIFO: posledný vložený prvok sa vyberie ako prvý.</p>
+              <p><b>Operácie:</b> `push`, `pop`, prípadne `peek/top`.</p>
+            </article>
+            <article class="theory-card">
+              <strong>16. Queue</strong>
+              <p>Fronta funguje na princípe FIFO: prvý vložený prvok sa spracuje ako prvý.</p>
+              <p><b>Operácie:</b> `enqueue`, `dequeue`, prípadne `peek`.</p>
+            </article>
+            <article class="theory-card">
+              <strong>17. FIFO vs LIFO</strong>
+              <p>FIFO spracuje najstarší prvok ako prvý, LIFO spracuje najnovší prvok ako prvý.</p>
+              <p><b>Rozlíšenie:</b> FIFO je fronta, LIFO je zásobník.</p>
+            </article>
+            <article class="theory-card">
+              <strong>18. Binárny strom</strong>
+              <p>Je hierarchická štruktúra uzlov, kde každý uzol môže mať najviac dvoch potomkov: ľavého a pravého.</p>
+              <p><b>Použitie:</b> vyhľadávanie, triedenie, hierarchie alebo kompresia dát.</p>
+            </article>
+          </div>
         </div>
       </section>
 
