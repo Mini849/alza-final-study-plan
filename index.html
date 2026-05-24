@@ -1,0 +1,1412 @@
+<!doctype html>
+<html lang="sk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Praktická príprava na skúšku z algoritmov</title>
+  <meta name="description" content="48-hodinový praktický tréning pseudokódu a code readingu na skúšku z analýzy a zložitosti algoritmov.">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #1d2320;
+      --muted: #5b655f;
+      --line: #d8ded6;
+      --paper: #fffdf8;
+      --soft: #f5f0e7;
+      --panel: #ffffff;
+      --accent: #0f766e;
+      --accent-dark: #0b5d57;
+      --accent-soft: #d9f0eb;
+      --warn: #a74420;
+      --warn-soft: #f8e2d7;
+      --gold: #96711d;
+      --gold-soft: #f5ead0;
+      --green: #2e7d32;
+      --code: #17211f;
+      --shadow: 0 12px 32px rgb(29 35 32 / 0.09);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+
+    a {
+      color: var(--accent-dark);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -48px;
+      left: 16px;
+      z-index: 20;
+      background: var(--ink);
+      color: white;
+      padding: 10px 14px;
+      border-radius: 6px;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    .page-shell {
+      min-height: 100vh;
+    }
+
+    .hero {
+      background:
+        linear-gradient(90deg, rgb(255 253 248 / 0.94), rgb(255 253 248 / 0.7)),
+        repeating-linear-gradient(0deg, transparent 0, transparent 31px, rgb(15 118 110 / 0.09) 32px),
+        repeating-linear-gradient(90deg, transparent 0, transparent 31px, rgb(151 113 29 / 0.08) 32px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-inner,
+    .section-inner,
+    .nav-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero-inner {
+      min-height: min(680px, 92vh);
+      padding: 46px 0 30px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      gap: 32px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent-dark);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      font-size: 0.86rem;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.12;
+      letter-spacing: 0;
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 880px;
+      font-size: clamp(2.35rem, 7vw, 5.2rem);
+    }
+
+    h2 {
+      font-size: clamp(1.7rem, 4vw, 2.9rem);
+    }
+
+    h3 {
+      font-size: 1.12rem;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin: 20px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.2vw, 1.28rem);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      background: var(--accent);
+      color: white;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      background: white;
+      color: var(--accent-dark);
+    }
+
+    .button.ghost {
+      background: transparent;
+      color: var(--ink);
+      border-color: var(--line);
+    }
+
+    .button:focus-visible,
+    .solution-toggle:focus-visible,
+    .tab-button:focus-visible,
+    .progress-check input:focus-visible {
+      outline: 3px solid rgb(15 118 110 / 0.28);
+      outline-offset: 3px;
+    }
+
+    .hero-board {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .score-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      background: var(--soft);
+      min-height: 112px;
+    }
+
+    .score-item strong {
+      display: block;
+      font-size: 1.75rem;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .score-item span {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .priority-list {
+      margin: 20px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+    }
+
+    .priority-list li {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      color: var(--muted);
+    }
+
+    .priority-list b {
+      color: var(--ink);
+    }
+
+    .number-pill {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      display: inline-grid;
+      place-items: center;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-weight: 900;
+    }
+
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgb(255 253 248 / 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-inner {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    .nav-inner a {
+      flex: 0 0 auto;
+      color: var(--ink);
+      font-weight: 800;
+      text-decoration: none;
+      padding: 9px 12px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+    }
+
+    .nav-inner a:hover {
+      background: var(--accent-soft);
+      border-color: rgb(15 118 110 / 0.18);
+    }
+
+    main section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    main section:nth-child(even) {
+      background: #faf6ee;
+    }
+
+    .section-header {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.55fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-kicker {
+      margin: 0 0 9px;
+      color: var(--warn);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      font-size: 0.8rem;
+    }
+
+    .section-header p,
+    .plain-copy {
+      margin: 12px 0 0;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .progress-box {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .progress-meter {
+      height: 12px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .progress-meter span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 180ms ease;
+    }
+
+    .workflow-grid,
+    .plan-grid,
+    .trace-grid,
+    .theory-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .plan-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .workflow-step,
+    .plan-card,
+    .trace-card,
+    .theory-card,
+    .drill-card,
+    .mistake-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgb(29 35 32 / 0.06);
+    }
+
+    .workflow-step,
+    .plan-card,
+    .trace-card,
+    .theory-card,
+    .mistake-card {
+      padding: 16px;
+    }
+
+    .workflow-step strong,
+    .plan-card strong,
+    .trace-card strong,
+    .theory-card strong,
+    .mistake-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1rem;
+    }
+
+    .workflow-step p,
+    .plan-card p,
+    .trace-card p,
+    .theory-card p,
+    .mistake-card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .plan-card {
+      min-height: 198px;
+    }
+
+    .plan-time {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      color: var(--accent-dark);
+      background: var(--accent-soft);
+      font-weight: 900;
+      font-size: 0.82rem;
+      margin-bottom: 10px;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 24px;
+    }
+
+    .tab-button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 999px;
+      min-height: 38px;
+      padding: 8px 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .tab-button[aria-pressed="true"] {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: white;
+    }
+
+    .drill-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .drill-card {
+      overflow: hidden;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drill-head {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--soft);
+    }
+
+    .drill-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-weight: 900;
+      font-size: 0.76rem;
+    }
+
+    .badge.warn {
+      background: var(--warn-soft);
+      color: var(--warn);
+    }
+
+    .prompt {
+      margin: 10px 0 0;
+      color: var(--muted);
+    }
+
+    .drill-body {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .progress-check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-weight: 800;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .progress-check input {
+      margin-top: 4px;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .micro-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .micro-list li + li {
+      margin-top: 4px;
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #eef8f3;
+      background: var(--code);
+      border-radius: 8px;
+      padding: 14px;
+      border: 1px solid rgb(255 255 255 / 0.08);
+      overflow-x: auto;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    .solution-toggle {
+      justify-self: start;
+      border: 1px solid var(--accent);
+      color: var(--accent-dark);
+      background: white;
+      border-radius: 6px;
+      min-height: 40px;
+      padding: 8px 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .solution {
+      display: none;
+      gap: 12px;
+    }
+
+    .solution.is-open {
+      display: grid;
+    }
+
+    .trace-table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      min-width: 680px;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--soft);
+      color: var(--ink);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .trace-example {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .mistake-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .footer {
+      padding: 28px 0 48px;
+      color: var(--muted);
+      background: var(--paper);
+    }
+
+    .footer p {
+      margin: 0;
+    }
+
+    @media (max-width: 1020px) {
+      .hero-inner,
+      .section-header {
+        grid-template-columns: 1fr;
+      }
+
+      .plan-grid,
+      .mistake-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .hero-inner,
+      .section-inner,
+      .nav-inner {
+        width: min(100% - 22px, 1180px);
+      }
+
+      .hero-inner {
+        min-height: auto;
+        padding: 34px 0 24px;
+      }
+
+      main section {
+        padding: 44px 0;
+      }
+
+      .score-grid,
+      .workflow-grid,
+      .plan-grid,
+      .trace-grid,
+      .theory-grid,
+      .drill-grid,
+      .mistake-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .drill-card {
+        min-height: auto;
+      }
+
+      .hero-board {
+        padding: 16px;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+        color: black;
+      }
+
+      .sticky-nav,
+      .hero-actions,
+      .filter-row,
+      .solution-toggle,
+      .skip-link {
+        display: none !important;
+      }
+
+      .hero,
+      main section,
+      .footer {
+        background: white !important;
+        border: 0;
+      }
+
+      .hero-inner,
+      .section-inner {
+        width: 100%;
+      }
+
+      .hero-inner,
+      .section-header,
+      .drill-grid,
+      .plan-grid,
+      .workflow-grid,
+      .trace-grid,
+      .mistake-grid,
+      .theory-grid {
+        display: block;
+      }
+
+      .hero-board,
+      .drill-card,
+      .plan-card,
+      .workflow-step,
+      .trace-card,
+      .trace-example,
+      .mistake-card,
+      .theory-card,
+      .progress-box {
+        box-shadow: none;
+        break-inside: avoid;
+        margin: 0 0 12px;
+      }
+
+      .solution {
+        display: grid !important;
+      }
+
+      pre {
+        white-space: pre-wrap;
+        color: black;
+        background: #f4f4f4;
+        border-color: #bbb;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Preskočiť na obsah</a>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-inner">
+        <div>
+          <p class="eyebrow">48 hodín • praktická časť • papier a pero</p>
+          <h1>Praktická príprava na skúšku z algoritmov</h1>
+          <p class="lead">Hlavný cieľ je vedieť z hlavy napísať pseudokód a bez hádania prečítať kód cez trasovaciu tabuľku. Teória je tu len ako krátka opora.</p>
+          <div class="hero-actions" aria-label="Rýchle odkazy">
+            <a class="button" href="#pseudokod">Začať pseudokód</a>
+            <a class="button secondary" href="#code-reading">Trénovať code reading</a>
+            <button class="button ghost" type="button" id="resetProgress">Resetovať progres</button>
+          </div>
+        </div>
+        <aside class="hero-board" aria-label="Rozdelenie skúšky">
+          <h2>Čo rozhoduje body</h2>
+          <div class="score-grid">
+            <div class="score-item">
+              <strong>40</strong>
+              <span>bodov za 2 algoritmy</span>
+            </div>
+            <div class="score-item">
+              <strong>30</strong>
+              <span>bodov za code reading</span>
+            </div>
+            <div class="score-item">
+              <strong>30</strong>
+              <span>bodov za krátku teóriu</span>
+            </div>
+          </div>
+          <ul class="priority-list">
+            <li><span class="number-pill">1</span><span><b>Pseudokód:</b> písať rukou, potom kontrolovať hranice cyklov a inicializáciu.</span></li>
+            <li><span class="number-pill">2</span><span><b>Code reading:</b> ku každému cyklu kresliť tabuľku premenných.</span></li>
+            <li><span class="number-pill">3</span><span><b>Teória:</b> naučiť sa jednovetové odpovede, nie celé eseje.</span></li>
+          </ul>
+        </aside>
+      </div>
+    </header>
+
+    <nav class="sticky-nav" aria-label="Navigácia stránky">
+      <div class="nav-inner">
+        <a href="#plan">48h plán</a>
+        <a href="#workflow">Postup písania</a>
+        <a href="#pseudokod">Pseudokód</a>
+        <a href="#code-reading">Code reading</a>
+        <a href="#tahak">Ťahák</a>
+        <a href="#chyby">Chyby</a>
+      </div>
+    </nav>
+
+    <main id="main">
+      <section id="plan">
+        <div class="section-inner">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">Crash plán</p>
+              <h2>48 hodín rozdelených podľa bodov</h2>
+              <p>Nečítaj materiály pasívne. Každý blok končí tým, že niečo napíšeš bez pozerania: pseudokód alebo trace tabuľku.</p>
+            </div>
+            <div class="progress-box">
+              <strong id="progressLabel">0 / 18 pseudokódov hotových</strong>
+              <div class="progress-meter" aria-hidden="true"><span id="progressBar"></span></div>
+            </div>
+          </div>
+
+          <div class="plan-grid" aria-label="48 hodinový plán">
+            <article class="plan-card">
+              <span class="plan-time">0-4 h</span>
+              <strong>Vytvor šablóny</strong>
+              <p>Prejdi všetky vzory: akumulátor, počítadlo, lineárny scan, swap, dva pointery, vnorené cykly. Ku každému napíš minimálnu kostru.</p>
+            </article>
+            <article class="plan-card">
+              <span class="plan-time">4-14 h</span>
+              <strong>Prvý rukopisný prechod</strong>
+              <p>Napíš všetkých 18 algoritmov bez riešení. Pri každom si zakrúžkuj vstup, výstup, inicializáciu a podmienku v cykle.</p>
+            </article>
+            <article class="plan-card">
+              <span class="plan-time">14-24 h</span>
+              <strong>Trace tabuľky</strong>
+              <p>Trénuj kód po riadkoch. Pre každý príklad maj stĺpce: krok, i, j alebo a, podmienka, zmena premennej, výsledok.</p>
+            </article>
+            <article class="plan-card">
+              <span class="plan-time">24-36 h</span>
+              <strong>Druhý prechod pod časom</strong>
+              <p>Vyber náhodne 8 algoritmov. Na každý si daj 8-10 minút. Potom oprav iba konkrétne chyby, nie celý text odznova.</p>
+            </article>
+            <article class="plan-card">
+              <span class="plan-time">36-42 h</span>
+              <strong>Najrizikovejšie úlohy</strong>
+              <p>Zopakuj bubble sort, palindrome, otočenie poľa, druhé maximum a druhé minimum. To sú úlohy s najviac hranami cyklov.</p>
+            </article>
+            <article class="plan-card">
+              <span class="plan-time">42-46 h</span>
+              <strong>Simulácia skúšky</strong>
+              <p>Napíš 2 pseudokódy a vyrieš 2 trace úlohy bez mobilu a bez poznámok. Potom oprav podľa checklistu.</p>
+            </article>
+            <article class="plan-card">
+              <span class="plan-time">46-48 h</span>
+              <strong>Len opakovanie</strong>
+              <p>Prebehni tahák, vzory a typické chyby. Už sa neuč nové varianty, iba stabilizuj postup, ktorý vieš napísať.</p>
+            </article>
+            <article class="plan-card">
+              <span class="plan-time">Skúška</span>
+              <strong>Postup na papieri</strong>
+              <p>Najprv premenné, potom cyklus, potom update, potom test na malom príklade. Pri code readingu vždy tabuľka.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="workflow">
+        <div class="section-inner">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">Metóda</p>
+              <h2>Postup pre každý pseudokód</h2>
+              <p>Toto je pevný rámec. Ak sa zasekneš, nečakaj na inšpiráciu; prejdi kroky v poradí.</p>
+            </div>
+          </div>
+          <div class="workflow-grid">
+            <article class="workflow-step">
+              <strong>1. Vstup a výstup</strong>
+              <p>Napíš, čo algoritmus dostane a čo má vrátiť: číslo, pole, reťazec, boolean, index alebo počet.</p>
+            </article>
+            <article class="workflow-step">
+              <strong>2. Stavové premenné</strong>
+              <p>Vyber minimum premenných: `pocet`, `sucet`, `najmensie`, `najdene`, `lavy`, `pravy`, `temp`.</p>
+            </article>
+            <article class="workflow-step">
+              <strong>3. Správny cyklus</strong>
+              <p>Lineárny scan ide od `0` po `n - 1`. Porovnanie susedov ide iba po `n - 2`. Reverse ide po polovicu.</p>
+            </article>
+            <article class="workflow-step">
+              <strong>4. Jedna hlavná podmienka</strong>
+              <p>Podmienka mení stav: pripočíta, prepíše maximum, nastaví `false`, alebo spraví `swap`.</p>
+            </article>
+            <article class="workflow-step">
+              <strong>5. Mini test</strong>
+              <p>Skús vstup s 3-5 hodnotami. Odhalí zlé hranice cyklu, nulovú inicializáciu produktu a zabudnutý return.</p>
+            </article>
+            <article class="workflow-step">
+              <strong>6. Zákaz skratiek</strong>
+              <p>Nepouži `.sort()`, `reverse()`, `max()`, `min()` ani hotové knižničné funkcie. Skúška chce samotný algoritmus.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="pseudokod">
+        <div class="section-inner">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">70 % štúdia</p>
+              <h2>Pseudokódový tréning</h2>
+              <p>Najprv napíš riešenie na papier. Až potom otvor kartu. Checkbox označ až vtedy, keď vieš úlohu zopakovať bez pozerania.</p>
+            </div>
+          </div>
+          <div class="filter-row" role="toolbar" aria-label="Filtrovanie úloh">
+            <button class="tab-button" type="button" data-filter="all" aria-pressed="true">Všetko</button>
+            <button class="tab-button" type="button" data-filter="Akumulátory">Akumulátory</button>
+            <button class="tab-button" type="button" data-filter="Scan">Scan</button>
+            <button class="tab-button" type="button" data-filter="Reverse">Reverse</button>
+            <button class="tab-button" type="button" data-filter="Triedenie">Triedenie</button>
+            <button class="tab-button" type="button" data-filter="Druhá hodnota">Druhá hodnota</button>
+          </div>
+          <div class="drill-grid" id="drillGrid"></div>
+        </div>
+      </section>
+
+      <section id="code-reading">
+        <div class="section-inner">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">25 % štúdia</p>
+              <h2>Code reading cez trace tabuľky</h2>
+              <p>Pri čítaní kódu nehádaj výsledok. Body sú za disciplinované sledovanie premenných krok po kroku.</p>
+            </div>
+          </div>
+
+          <div class="trace-grid">
+            <article class="trace-card">
+              <strong>Stĺpce tabuľky</strong>
+              <p>`krok`, `i`, `j`, `podmienka`, `výpočet`, `nová hodnota`. Pri `while` nahraď `i/j` premennými z kódu.</p>
+            </article>
+            <article class="trace-card">
+              <strong>Poradie</strong>
+              <p>Najprv over podmienku cyklu, potom vykonaj telo, potom aktualizuj premenné. Nepreskakuj poslednú neúspešnú podmienku.</p>
+            </article>
+            <article class="trace-card">
+              <strong>Kontrola</strong>
+              <p>Po každom riadku si polož otázku: ktorá premenná sa zmenila a ktorá zostala rovnaká?</p>
+            </article>
+          </div>
+
+          <article class="trace-example">
+            <h3>Príklad 1: vnorené cykly, výsledok `30`</h3>
+            <pre><code>c = 0
+for i = 0 to 3:
+    for j = 0 to i:
+        c = c + i + j
+return c</code></pre>
+            <button class="solution-toggle" type="button" data-target="trace1">Ukázať riešenie</button>
+            <div class="solution" id="trace1">
+              <div class="trace-table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>i</th><th>j</th><th>Výpočet</th><th>c</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>0</td><td>0</td><td>0 + 0 + 0</td><td>0</td></tr>
+                    <tr><td>1</td><td>0</td><td>0 + 1 + 0</td><td>1</td></tr>
+                    <tr><td>1</td><td>1</td><td>1 + 1 + 1</td><td>3</td></tr>
+                    <tr><td>2</td><td>0</td><td>3 + 2 + 0</td><td>5</td></tr>
+                    <tr><td>2</td><td>1</td><td>5 + 2 + 1</td><td>8</td></tr>
+                    <tr><td>2</td><td>2</td><td>8 + 2 + 2</td><td>12</td></tr>
+                    <tr><td>3</td><td>0</td><td>12 + 3 + 0</td><td>15</td></tr>
+                    <tr><td>3</td><td>1</td><td>15 + 3 + 1</td><td>19</td></tr>
+                    <tr><td>3</td><td>2</td><td>19 + 3 + 2</td><td>24</td></tr>
+                    <tr><td>3</td><td>3</td><td>24 + 3 + 3</td><td>30</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+
+          <article class="trace-example">
+            <h3>Príklad 2: while cyklus, výsledok `46`</h3>
+            <pre><code>a = 5
+c = 100
+b = a * a
+while b > 3:
+    c = c - b
+    a = a - 1
+    b = a * a
+return c</code></pre>
+            <button class="solution-toggle" type="button" data-target="trace2">Ukázať riešenie</button>
+            <div class="solution" id="trace2">
+              <div class="trace-table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>Krok</th><th>a</th><th>b</th><th>b &gt; 3</th><th>Výpočet</th><th>c</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Štart</td><td>5</td><td>25</td><td>-</td><td>-</td><td>100</td></tr>
+                    <tr><td>1</td><td>5</td><td>25</td><td>áno</td><td>100 - 25</td><td>75</td></tr>
+                    <tr><td>2</td><td>4</td><td>16</td><td>áno</td><td>75 - 16</td><td>59</td></tr>
+                    <tr><td>3</td><td>3</td><td>9</td><td>áno</td><td>59 - 9</td><td>50</td></tr>
+                    <tr><td>4</td><td>2</td><td>4</td><td>áno</td><td>50 - 4</td><td>46</td></tr>
+                    <tr><td>Koniec</td><td>1</td><td>1</td><td>nie</td><td>-</td><td>46</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+
+          <article class="trace-example">
+            <h3>Extra tréning: odpoveď najprv zakry</h3>
+            <pre><code>x = 1
+for i = 1 to 4:
+    if i % 2 == 0:
+        x = x + i
+    else:
+        x = x * i
+return x</code></pre>
+            <button class="solution-toggle" type="button" data-target="trace3">Ukázať riešenie</button>
+            <div class="solution" id="trace3">
+              <p class="plain-copy"><strong>Výsledok:</strong> `13`. Trace: štart `x = 1`; i=1 nepárne, `x = 1 * 1 = 1`; i=2 párne, `x = 1 + 2 = 3`; i=3 nepárne, `x = 3 * 3 = 9`; i=4 párne, `x = 9 + 4 = 13`. Sleduj presné poradie riadkov, lebo zmena poradia mení výsledok.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="tahak">
+        <div class="section-inner">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">5 % štúdia</p>
+              <h2>Rýchly praktický ťahák</h2>
+              <p>Krátke vety, ktoré stačia ako opora pri vysvetlení algoritmu alebo pri kontrole zložitosti.</p>
+            </div>
+          </div>
+          <div class="theory-grid">
+            <article class="theory-card"><strong>Big-O</strong><p>Opisuje, ako rastie počet krokov alebo pamäte pri raste vstupu `n`.</p></article>
+            <article class="theory-card"><strong>Lineárny scan</strong><p>Prejde prvky jeden po druhom. Typicky `O(n)`.</p></article>
+            <article class="theory-card"><strong>Bubble sort</strong><p>Porovnáva susedov a väčšie hodnoty posúva ku koncu. Typicky `O(n²)`.</p></article>
+            <article class="theory-card"><strong>Binárne vyhľadávanie</strong><p>Funguje iba v zoradenom poli a delí interval na polovice. `O(log n)`.</p></article>
+            <article class="theory-card"><strong>Stack</strong><p>LIFO: posledný vložený prvok ide von prvý. Operácie `push`, `pop`.</p></article>
+            <article class="theory-card"><strong>Queue</strong><p>FIFO: prvý vložený prvok ide von prvý. Operácie `enqueue`, `dequeue`.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="chyby">
+        <div class="section-inner">
+          <div class="section-header">
+            <div>
+              <p class="section-kicker">Kontrola pred odovzdaním</p>
+              <h2>Chyby, ktoré berú body</h2>
+              <p>Po dopísaní riešenia prebehni tento zoznam. Väčšina praktických strát vzniká z detailov, nie z nepochopenia zadania.</p>
+            </div>
+          </div>
+          <div class="mistake-grid">
+            <article class="mistake-card"><strong>`sucin = 0`</strong><p>Produkt alebo faktoriál musí začínať na `1`, inak celý výsledok ostane nula.</p></article>
+            <article class="mistake-card"><strong>Zlé hranice</strong><p>Pri susedoch nekontroluj `pole[n]`. Posledné porovnanie je `pole[n - 2]` s `pole[n - 1]`.</p></article>
+            <article class="mistake-card"><strong>Swap bez `temp`</strong><p>Ak prepíšeš prvú hodnotu bez dočasnej premennej, jednu hodnotu stratíš.</p></article>
+            <article class="mistake-card"><strong>Hotové funkcie</strong><p>`sort`, `reverse`, `max`, `min` a podobné skratky nepíš. Skúša sa algoritmus.</p></article>
+            <article class="mistake-card"><strong>Druhé maximum</strong><p>Sleduj dve hodnoty naraz a rozhodni, čo robiť s duplicitami podľa zadania.</p></article>
+            <article class="mistake-card"><strong>Palindrome</strong><p>Netreba otočiť celý text. Stačí porovnávať ľavý a pravý znak smerom do stredu.</p></article>
+            <article class="mistake-card"><strong>Code reading spamäti</strong><p>Bez tabuľky ľahko preskočíš update po poslednej iterácii.</p></article>
+            <article class="mistake-card"><strong>Chýbajúci return</strong><p>Každý algoritmus musí jasne vrátiť alebo vypísať výsledok.</p></article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="section-inner">
+        <p>Postavené z lokálnych študijných materiálov pre praktickú prípravu: pseudokód, trace tabuľky, opakovaný rukopisný tréning.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "alzaStudyProgress:v1";
+
+    const drills = [
+      {
+        id: "sum-n",
+        group: "Akumulátory",
+        title: "Spočítanie čísel od 1 po N",
+        prompt: "Napíš algoritmus, ktorý spočíta hodnoty 1 + 2 + ... + N.",
+        idea: ["výstup je jedno číslo", "začni `sucet = 0`", "cyklus ide od 1 po N vrátane", "v každom kroku pripočítaj `i`"],
+        skeleton: `sucet = 0
+for i = 1 to N:
+    sucet = sucet + i
+return sucet`,
+        mistakes: ["nezačni cyklus od 0, ak zadanie hovorí od 1", "nezabudni `return sucet`"],
+        check: "Pre N = 4 má vyjsť 10."
+      },
+      {
+        id: "product-n",
+        group: "Akumulátory",
+        title: "Násobenie čísel od 1 po N",
+        prompt: "Napíš algoritmus pre produkt 1 * 2 * ... * N.",
+        idea: ["výstup je produkt", "začni `sucin = 1`", "cyklus ide od 1 po N", "v každom kroku násob"],
+        skeleton: `sucin = 1
+for i = 1 to N:
+    sucin = sucin * i
+return sucin`,
+        mistakes: ["nikdy neinicializuj produkt na 0", "pri N = 1 musí výsledok ostať 1"],
+        check: "Pre N = 5 má vyjsť 120."
+      },
+      {
+        id: "vowels",
+        group: "Akumulátory",
+        title: "Spočítanie samohlások v reťazci",
+        prompt: "Prejdi text a spočítaj, koľko znakov je samohláska.",
+        idea: ["počítadlo začína na 0", "prechádzaj každý znak", "ak je znak samohláska, zvýš počet", "vráť počet"],
+        skeleton: `pocet = 0
+for i = 0 to dlzka(text) - 1:
+    znak = text[i]
+    if znak == 'a' or znak == 'e' or znak == 'i' or znak == 'o' or znak == 'u':
+        pocet = pocet + 1
+return pocet`,
+        mistakes: ["ak chceš riešiť veľké písmená, dopíš ich explicitne", "nepouži hotovú funkciu na filtrovanie"],
+        check: "Pre text `mama` majú vyjsť 2."
+      },
+      {
+        id: "reverse-string",
+        group: "Reverse",
+        title: "Otočenie textového reťazca",
+        prompt: "Vytvor otočený reťazec bez použitia hotovej funkcie.",
+        idea: ["vytvor prázdny reťazec", "choď od posledného indexu po 0", "pridávaj znaky do výsledku", "vráť otočený text"],
+        skeleton: `otoceny = ""
+for i = dlzka(text) - 1 downto 0:
+    otoceny = otoceny + text[i]
+return otoceny`,
+        mistakes: ["posledný index je `dlzka(text) - 1`", "cyklus musí skončiť až na indexe 0"],
+        check: "`abcd` sa zmení na `dcba`."
+      },
+      {
+        id: "palindrome",
+        group: "Reverse",
+        title: "Zistenie, či je reťazec palindróm",
+        prompt: "Rozhodni, či sa text číta rovnako spredu aj zozadu.",
+        idea: ["nastav ľavý a pravý index", "porovnávaj znaky", "pri nezhode vráť `false`", "posúvaj indexy ku stredu"],
+        skeleton: `lavy = 0
+pravy = dlzka(text) - 1
+while lavy < pravy:
+    if text[lavy] != text[pravy]:
+        return false
+    lavy = lavy + 1
+    pravy = pravy - 1
+return true`,
+        mistakes: ["neporovnávaj index mimo reťazca", "po každom úspešnom porovnaní posuň oba indexy"],
+        check: "`radar` je true, `dom` je false."
+      },
+      {
+        id: "bubble-sort",
+        group: "Triedenie",
+        title: "Zoradenie poľa čísel: Bubble sort",
+        prompt: "Zoraď pole vzostupne porovnávaním susedných prvkov.",
+        idea: ["potrebuješ dva cykly", "vnútorný cyklus porovnáva `j` a `j + 1`", "ak sú v zlom poradí, vymeň cez `temp`", "nepouži `.sort()`"],
+        skeleton: `for i = 0 to n - 1:
+    for j = 0 to n - i - 2:
+        if pole[j] > pole[j + 1]:
+            temp = pole[j]
+            pole[j] = pole[j + 1]
+            pole[j + 1] = temp
+return pole`,
+        mistakes: ["vnútorný cyklus nesmie ísť po `n - 1`, lebo používa `j + 1`", "pri swape nestratiť hodnotu"],
+        check: "`[3, 1, 2]` sa zmení na `[1, 2, 3]`."
+      },
+      {
+        id: "find-number",
+        group: "Scan",
+        title: "Vyhľadanie konkrétneho čísla v poli",
+        prompt: "Zisti, či sa hľadané číslo nachádza v poli.",
+        idea: ["prechádzaj celé pole", "každý prvok porovnaj s hľadaným", "pri zhode môžeš hneď vrátiť true", "po cykle vráť false"],
+        skeleton: `for i = 0 to n - 1:
+    if pole[i] == hladane:
+        return true
+return false`,
+        mistakes: ["nevracaj false vnútri cyklu po prvej nezhode", "ak treba index, vráť `i`, nie boolean"],
+        check: "`[4, 7, 9]`, hľadané 7 -> true."
+      },
+      {
+        id: "min-number",
+        group: "Scan",
+        title: "Vyhľadanie najmenšieho čísla",
+        prompt: "Nájdi minimum v poli bez použitia `min()`.",
+        idea: ["prvý prvok je dočasné minimum", "začni porovnávať od indexu 1", "pri menšej hodnote prepíš minimum", "vráť minimum"],
+        skeleton: `najmensie = pole[0]
+for i = 1 to n - 1:
+    if pole[i] < najmensie:
+        najmensie = pole[i]
+return najmensie`,
+        mistakes: ["neinicializuj na náhodné číslo", "predpokladaj, že pole má aspoň jeden prvok, ak zadanie nerieši prázdne pole"],
+        check: "`[8, 3, 5]` -> 3."
+      },
+      {
+        id: "max-number",
+        group: "Scan",
+        title: "Vyhľadanie najväčšieho čísla",
+        prompt: "Nájdi maximum v poli bez použitia `max()`.",
+        idea: ["prvý prvok je dočasné maximum", "porovnávaj ostatné prvky", "pri väčšej hodnote prepíš maximum", "vráť maximum"],
+        skeleton: `najvacsie = pole[0]
+for i = 1 to n - 1:
+    if pole[i] > najvacsie:
+        najvacsie = pole[i]
+return najvacsie`,
+        mistakes: ["nezabudni začať od indexu 1", "neporovnávaj s nesprávnou premennou"],
+        check: "`[8, 3, 5]` -> 8."
+      },
+      {
+        id: "even-count",
+        group: "Akumulátory",
+        title: "Spočítanie párnych čísel",
+        prompt: "Spočítaj, koľko prvkov poľa je párnych.",
+        idea: ["počítadlo začína na 0", "prechádzaj celé pole", "párne číslo má zvyšok po delení 2 rovný 0", "pri zhode zvýš počet"],
+        skeleton: `pocet = 0
+for i = 0 to n - 1:
+    if pole[i] % 2 == 0:
+        pocet = pocet + 1
+return pocet`,
+        mistakes: ["nemýľ si `% 2 == 0` s nepárnym prípadom", "počítaj prvky, nie ich súčet"],
+        check: "`[2, 5, 8]` -> 2."
+      },
+      {
+        id: "odd-count",
+        group: "Akumulátory",
+        title: "Spočítanie nepárnych čísel",
+        prompt: "Spočítaj, koľko prvkov poľa je nepárnych.",
+        idea: ["rovnaký vzor ako párne", "podmienka je `% 2 != 0`", "pri splnení zvýš počítadlo", "vráť počet"],
+        skeleton: `pocet = 0
+for i = 0 to n - 1:
+    if pole[i] % 2 != 0:
+        pocet = pocet + 1
+return pocet`,
+        mistakes: ["nevracaj boolean, úloha chce počet", "nezabudni prejsť celé pole"],
+        check: "`[2, 5, 8]` -> 1."
+      },
+      {
+        id: "exists-once",
+        group: "Scan",
+        title: "Výskyt prvku aspoň raz",
+        prompt: "Zisti, či sa daný prvok nachádza v poli aspoň raz.",
+        idea: ["je to boolean úloha", "pri prvej zhode skonči", "ak zhoda nepríde, vráť false", "netreba počítať všetky výskyty"],
+        skeleton: `for i = 0 to n - 1:
+    if pole[i] == prvok:
+        return true
+return false`,
+        mistakes: ["nezamieňaj s počtom výskytov", "false patrí až za cyklus"],
+        check: "`[1, 2, 2]`, prvok 2 -> true."
+      },
+      {
+        id: "occurrences",
+        group: "Akumulátory",
+        title: "Počet výskytov prvku",
+        prompt: "Zisti, koľkokrát sa daný prvok v poli nachádza.",
+        idea: ["počítadlo začína na 0", "prechádzaj celé pole aj po prvej zhode", "pri každej zhode zvýš počet", "vráť počet"],
+        skeleton: `pocet = 0
+for i = 0 to n - 1:
+    if pole[i] == prvok:
+        pocet = pocet + 1
+return pocet`,
+        mistakes: ["neskonči po prvej zhode", "úloha chce počet, nie true/false"],
+        check: "`[1, 2, 2, 3]`, prvok 2 -> 2."
+      },
+      {
+        id: "second-largest",
+        group: "Druhá hodnota",
+        title: "Druhé najväčšie číslo",
+        prompt: "Nájdi druhú najväčšiu hodnotu v poli.",
+        idea: ["sleduj `najvacsie` aj `druhe`", "pri novom maxime posuň staré maximum do druhej hodnoty", "inak aktualizuj druhú hodnotu", "ošetri duplicitné maximum podľa zadania"],
+        skeleton: `najvacsie = -nekonecno
+druhe = -nekonecno
+for i = 0 to n - 1:
+    if pole[i] > najvacsie:
+        druhe = najvacsie
+        najvacsie = pole[i]
+    else if pole[i] > druhe and pole[i] != najvacsie:
+        druhe = pole[i]
+return druhe`,
+        mistakes: ["keď nájdeš nové maximum, musíš zachovať staré maximum ako druhé", "pozor na duplicitné najväčšie hodnoty"],
+        check: "`[4, 9, 2, 7]` -> 7."
+      },
+      {
+        id: "second-smallest",
+        group: "Druhá hodnota",
+        title: "Druhé najmenšie číslo",
+        prompt: "Nájdi druhú najmenšiu hodnotu v poli.",
+        idea: ["sleduj `najmensie` aj `druhe`", "pri novom minime posuň staré minimum", "inak aktualizuj druhú hodnotu", "ošetri duplicitné minimum podľa zadania"],
+        skeleton: `najmensie = nekonecno
+druhe = nekonecno
+for i = 0 to n - 1:
+    if pole[i] < najmensie:
+        druhe = najmensie
+        najmensie = pole[i]
+    else if pole[i] < druhe and pole[i] != najmensie:
+        druhe = pole[i]
+return druhe`,
+        mistakes: ["pri novom minime neposuň druhú hodnotu zlým smerom", "nemiešaj znamienka `<` a `>`"],
+        check: "`[4, 9, 2, 7]` -> 4."
+      },
+      {
+        id: "reverse-array",
+        group: "Reverse",
+        title: "Otočenie poľa čísel",
+        prompt: "Otoč pole v pamäti bez použitia `reverse()`.",
+        idea: ["použi ľavý a pravý index", "vymieňaj prvky cez `temp`", "posúvaj indexy ku stredu", "konči keď sa stretnú"],
+        skeleton: `lavy = 0
+pravy = n - 1
+while lavy < pravy:
+    temp = pole[lavy]
+    pole[lavy] = pole[pravy]
+    pole[pravy] = temp
+    lavy = lavy + 1
+    pravy = pravy - 1
+return pole`,
+        mistakes: ["bez `temp` stratíš hodnotu", "nezabudni posúvať oba indexy"],
+        check: "`[1, 2, 3]` -> `[3, 2, 1]`."
+      },
+      {
+        id: "ascending",
+        group: "Triedenie",
+        title: "Kontrola vzostupného zoradenia",
+        prompt: "Zisti, či je pole zoradené od najmenšieho po najväčšie.",
+        idea: ["porovnávaj susedov", "ak ľavý prvok je väčší ako pravý, nie je vzostupné", "stačí jedna chyba", "inak vráť true"],
+        skeleton: `for i = 0 to n - 2:
+    if pole[i] > pole[i + 1]:
+        return false
+return true`,
+        mistakes: ["cyklus ide len po `n - 2`", "pri rovnakých susedoch je pole stále neklesajúce"],
+        check: "`[1, 2, 2, 5]` -> true."
+      },
+      {
+        id: "descending",
+        group: "Triedenie",
+        title: "Kontrola zostupného zoradenia",
+        prompt: "Zisti, či je pole zoradené od najväčšieho po najmenšie.",
+        idea: ["porovnávaj susedov", "ak ľavý prvok je menší ako pravý, nie je zostupné", "stačí jedna chyba", "inak vráť true"],
+        skeleton: `for i = 0 to n - 2:
+    if pole[i] < pole[i + 1]:
+        return false
+return true`,
+        mistakes: ["nemiešaj podmienku so vzostupnou kontrolou", "cyklus nesmie ísť mimo pole"],
+        check: "`[9, 7, 7, 1]` -> true."
+      }
+    ];
+
+    const grid = document.querySelector("#drillGrid");
+    const progressLabel = document.querySelector("#progressLabel");
+    const progressBar = document.querySelector("#progressBar");
+    const filterButtons = [...document.querySelectorAll("[data-filter]")];
+
+    function loadProgress() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveProgress(progress) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+    }
+
+    function updateProgress() {
+      const progress = loadProgress();
+      const done = drills.filter((drill) => progress[drill.id]).length;
+      const percent = Math.round((done / drills.length) * 100);
+      progressLabel.textContent = `${done} / ${drills.length} pseudokódov hotových`;
+      progressBar.style.width = `${percent}%`;
+    }
+
+    function renderDrills(filter = "all") {
+      const progress = loadProgress();
+      const visible = filter === "all" ? drills : drills.filter((drill) => drill.group === filter);
+      grid.innerHTML = visible.map((drill) => `
+        <article class="drill-card" data-group="${drill.group}">
+          <div class="drill-head">
+            <div class="drill-meta">
+              <span class="badge">${drill.group}</span>
+              <span class="badge warn">praktická úloha</span>
+            </div>
+            <h3>${drill.title}</h3>
+            <p class="prompt">${drill.prompt}</p>
+          </div>
+          <div class="drill-body">
+            <label class="progress-check">
+              <input type="checkbox" data-drill-id="${drill.id}" ${progress[drill.id] ? "checked" : ""}>
+              <span>Viem napísať bez pozerania</span>
+            </label>
+            <div>
+              <strong>Myšlienka</strong>
+              <ul class="micro-list">${drill.idea.map((item) => `<li>${item}</li>`).join("")}</ul>
+            </div>
+            <button class="solution-toggle" type="button" data-target="solution-${drill.id}">Ukázať riešenie</button>
+            <div class="solution" id="solution-${drill.id}">
+              <pre><code>${drill.skeleton}</code></pre>
+              <div>
+                <strong>Kontrola</strong>
+                <ul class="micro-list">
+                  <li>${drill.check}</li>
+                  ${drill.mistakes.map((item) => `<li>${item}</li>`).join("")}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function toggleSolution(button) {
+      const target = document.getElementById(button.dataset.target);
+      if (!target) return;
+      const open = target.classList.toggle("is-open");
+      button.textContent = open ? "Skryť riešenie" : "Ukázať riešenie";
+    }
+
+    document.addEventListener("click", (event) => {
+      const toggle = event.target.closest(".solution-toggle");
+      if (toggle) toggleSolution(toggle);
+
+      const filterButton = event.target.closest("[data-filter]");
+      if (filterButton) {
+        filterButtons.forEach((button) => button.setAttribute("aria-pressed", String(button === filterButton)));
+        renderDrills(filterButton.dataset.filter);
+        updateProgress();
+      }
+    });
+
+    document.addEventListener("change", (event) => {
+      const input = event.target.closest("[data-drill-id]");
+      if (!input) return;
+      const progress = loadProgress();
+      progress[input.dataset.drillId] = input.checked;
+      saveProgress(progress);
+      updateProgress();
+    });
+
+    document.querySelector("#resetProgress").addEventListener("click", () => {
+      localStorage.removeItem(STORAGE_KEY);
+      renderDrills(document.querySelector("[data-filter][aria-pressed='true']").dataset.filter);
+      updateProgress();
+    });
+
+    renderDrills();
+    updateProgress();
+  </script>
+</body>
+</html>
